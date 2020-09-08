@@ -9,8 +9,6 @@ Few things to know before getting started
 - Only tested with the API for [ApiSauce](https://github.com/infinitered/apisauce)
 - We are working on the other verbs (TODO issues coming soon)
 
-![]
-
 ## Typical Usage
 
 `src/redux/modules/events`

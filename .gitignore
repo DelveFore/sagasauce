@@ -8,6 +8,7 @@
 .gradle
 local.properties
 *.iml
+dist
 
 # node.js
 #
