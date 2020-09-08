@@ -2,19 +2,28 @@
   "name": "@delvefore/sagasauce",
   "version": "0.1.0",
   "description": "Sauce for Redux Sagas based on reduxsauce",
-  "main": "./dist/sagasauce.js",
+  "main": "dist/index.js",
   "repository": "https://github.com/DelveFore/sagasauce.git",
   "author": "John Bailey <641367+johntimothybailey@users.noreply.github.com>",
   "license": "MIT",
   "private": false,
   "scripts": {
+    "build": "yarn build:flow-copy && yarn build:commonjs",
+    "build:commonjs": "babel src --out-dir dist",
+    "build:flow-copy": "flow-copy-source src lib",
     "test": "jest",
     "test:watch": "yarn test --watch",
     "test:coverage": "yarn test --coverage",
     "test:coverage-open": "yarn test:coverage && open coverage/lcov-report/index.html",
     "lint": "eslint .",
-    "lint:fix": "yarn lint --fix"
+    "lint:fix": "yarn lint --fix",
+    "release": "semantic-release"
   },
+  "files": [
+    "dist",
+    "README.md",
+    "src"
+  ],
   "peerDependencies": {
     "redux": "4.x",
     "reduxsauce": "1.x"
@@ -25,6 +34,7 @@
     "reduxsauce": "^1.2.0"
   },
   "devDependencies": {
+    "@babel/cli": "^7.11.6",
     "@babel/core": "^7.11.6",
     "@babel/eslint-parser": "^7.11.5",
     "@babel/eslint-plugin": "^7.11.5",
@@ -32,6 +42,7 @@
     "@babel/runtime": "^7.11.2",
     "@semantic-release/git": "^9.0.0",
     "babel-jest": "^26.3.0",
+    "cross-env": "^7.0.2",
     "eslint": "^7.8.1",
     "eslint-config-prettier": "^6.11.0",
     "eslint-config-standard": "^14.1.1",
@@ -42,6 +53,7 @@
     "eslint-plugin-prettier": "^3.1.4",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
+    "flow-copy-source": "^2.0.9",
     "jest": "^26.4.2",
     "prettier": "^2.1.1",
     "semantic-release": "^17.1.1"
