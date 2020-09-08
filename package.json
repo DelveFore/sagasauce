@@ -1,0 +1,94 @@
+{
+  "name": "@delvefore/sagasauce",
+  "version": "0.1.0",
+  "description": "Sauce for Redux Sagas based on reduxsauce",
+  "main": "./dist/sagasauce.js",
+  "repository": "https://github.com/DelveFore/sagasauce.git",
+  "author": "John Bailey <641367+johntimothybailey@users.noreply.github.com>",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "test": "jest",
+    "test:watch": "yarn test --watch",
+    "test:coverage": "yarn test --coverage",
+    "test:coverage-open": "yarn test:coverage && open coverage/lcov-report/index.html",
+    "lint": "eslint .",
+    "lint:fix": "yarn lint --fix"
+  },
+  "peerDependencies": {
+    "redux": "4.x",
+    "reduxsauce": "1.x"
+  },
+  "dependencies": {
+    "lodash": "^4.17.20",
+    "redux": "^4.0.5",
+    "reduxsauce": "^1.2.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.11.6",
+    "@babel/eslint-parser": "^7.11.5",
+    "@babel/eslint-plugin": "^7.11.5",
+    "@babel/preset-env": "^7.11.5",
+    "@babel/runtime": "^7.11.2",
+    "@semantic-release/git": "^9.0.0",
+    "babel-jest": "^26.3.0",
+    "eslint": "^7.8.1",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-babel": "^5.3.1",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-jest": "^24.0.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
+    "jest": "^26.4.2",
+    "prettier": "^2.1.1",
+    "semantic-release": "^17.1.1"
+  },
+  "jest": {
+    "testMatch": [
+      "<rootDir>/tests/**/*.test.js"
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "<rootDir>/tests/Setup.js"
+    ],
+    "moduleNameMapper": {
+      "^.+\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "identity-obj-proxy"
+    },
+    "transform": {
+      "^.+\\.(t|j)s$": "babel-jest"
+    },
+    "setupFiles": [
+      "<rootDir>/tests/Setup"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 90,
+        "functions": 90,
+        "lines": 90,
+        "statements": 90
+      }
+    }
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "tag": "latest"
+  },
+  "release": {
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/npm",
+      "@semantic-release/github",
+      [
+        "@semantic-release/git",
+        {
+          "assets": "package.json",
+          "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+        }
+      ]
+    ]
+  }
+}
