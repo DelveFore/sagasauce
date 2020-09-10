@@ -36,12 +36,27 @@ describe('SagaSauce', () => {
         createData: jest.fn()
       }
       const result = createDispatchersFactory('myBooks', Creators)(dispatch)
-      expect(result).toHaveProperty('getMyBooks')
+      expect(result).toHaveProperty('createMyBooks')
       result.createMyBooks({ name: 'something' })
       expect(dispatch).toHaveBeenCalledTimes(2)
       expect(Creators.getData).toHaveBeenCalledTimes(1)
       expect(Creators.createData).toHaveBeenCalledTimes(1)
       expect(Creators.createData).toHaveBeenCalledWith({ name: 'something' })
+    })
+    test('has UPDATE dispatcher', () => {
+      const dispatch = jest.fn()
+      const Creators = {
+        getData: jest.fn(),
+        createData: jest.fn(),
+        updateData: jest.fn()
+      }
+      const result = createDispatchersFactory('myBooks', Creators)(dispatch)
+      expect(result).toHaveProperty('updateMyBooks')
+      result.updateMyBooks({ name: 'John' })
+      expect(dispatch).toHaveBeenCalledTimes(1)
+      expect(Creators.getData).toHaveBeenCalledTimes(0)
+      expect(Creators.createData).toHaveBeenCalledTimes(0)
+      expect(Creators.updateData).toHaveBeenCalledWith({ name: 'John' })
     })
   })
   describe('createRestActions', () => {
@@ -78,7 +93,10 @@ describe('SagaSauce', () => {
       'GET_DATA_FAILURE',
       'CREATE_DATA',
       'CREATE_DATA_SUCCESS',
-      'CREATE_DATA_FAILURE'
+      'CREATE_DATA_FAILURE',
+      'UPDATE_DATA',
+      'UPDATE_DATA_SUCCESS',
+      'UPDATE_DATA_FAILURE'
     ])
     test('throws errors for missing types', () => {
       expect(() => createRestReducersHandlers({})).toThrow(
@@ -146,6 +164,49 @@ describe('SagaSauce', () => {
         expect(reducer).toHaveProperty('CREATE_DATA_FAILURE')
         expect(reducer.CREATE_DATA_FAILURE({}, { errors: ['no'] })).toEqual({
           isPending: false,
+          errors: ['no']
+        })
+      })
+    })
+    describe('UPDATE reducer handlers', () => {
+      const stateBeforeUpdate = {
+        data: { name: 'Yamanu' },
+        errors: null,
+        isPending: false
+      }
+      test('has UPDATE_DATA', () => {
+        const reducer = createRestReducersHandlers(EXPECTED_TYPES)
+        expect(reducer).toHaveProperty('UPDATE_DATA')
+        expect(
+          reducer.UPDATE_DATA(stateBeforeUpdate, { data: { name: 'John' } })
+        ).toEqual({
+          // Do not change the data during UPDATE request
+          data: { name: 'Yamanu' },
+          errors: null,
+          isPending: true
+        })
+      })
+      test('has UPDATE_DATA_SUCCESS', () => {
+        const reducer = createRestReducersHandlers(EXPECTED_TYPES)
+        expect(reducer).toHaveProperty('UPDATE_DATA_SUCCESS')
+        expect(
+          reducer.UPDATE_DATA_SUCCESS(stateBeforeUpdate, {
+            data: { name: 'John' }
+          })
+        ).toEqual({
+          isPending: false,
+          errors: null,
+          data: { name: 'John' }
+        })
+      })
+      test('has UPDATE_DATA_FAILURE', () => {
+        const reducer = createRestReducersHandlers(EXPECTED_TYPES)
+        expect(reducer).toHaveProperty('UPDATE_DATA_FAILURE')
+        expect(
+          reducer.UPDATE_DATA_FAILURE(stateBeforeUpdate, { errors: ['no'] })
+        ).toEqual({
+          isPending: false,
+          data: { name: 'Yamanu' },
           errors: ['no']
         })
       })

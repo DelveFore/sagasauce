@@ -16,6 +16,9 @@ export const createDispatchersFactory = (prefix, Creators) => {
     ['create' + prefix]: (data) => {
       dispatch(Creators.createData(data))
       dispatch(Creators.getData())
+    },
+    ['update' + prefix]: (data) => {
+      dispatch(Creators.updateData(data))
     }
   })
 }
@@ -37,7 +40,10 @@ export default (prefix) => {
       getDataFailure: ['errors'],
       createData: ['data'],
       createDataSuccess: null,
-      createDataFailure: ['errors']
+      createDataFailure: ['errors'],
+      updateData: ['data'],
+      updateDataSuccess: null,
+      updateDataFailure: ['errors']
     },
     {
       prefix
