@@ -11,5 +11,6 @@ module.exports = {
     'plugin:jest/recommended',
     'plugin:jest/style'
   ],
-  parser: '@babel/eslint-parser'
+  parser: '@babel/eslint-parser',
+  ignorePatterns: ['./coverage', './dist/**/*']
 }

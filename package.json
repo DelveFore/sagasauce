@@ -14,7 +14,7 @@
     "test:watch": "yarn test --watch",
     "test:coverage": "yarn test --coverage",
     "test:coverage-open": "yarn test:coverage && open coverage/lcov-report/index.html",
-    "lint": "eslint .",
+    "lint": "eslint src tests",
     "lint:fix": "yarn lint --fix",
     "release": "semantic-release"
   },
