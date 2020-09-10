@@ -4,15 +4,15 @@
 
 # IntelliJ
 #
-.idea
+.idea/
 .gradle
 local.properties
 *.iml
-dist
+dist/
 
 # node.js
 #
 node_modules/
 npm-debug.log
 yarn-error.log
-coverage
+coverage/

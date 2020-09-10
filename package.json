@@ -8,14 +8,13 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "build": "yarn build:flow-copy && yarn build:commonjs",
+    "build": "yarn build:commonjs",
     "build:commonjs": "babel src --out-dir dist",
-    "build:flow-copy": "flow-copy-source src lib",
     "test": "jest",
     "test:watch": "yarn test --watch",
     "test:coverage": "yarn test --coverage",
     "test:coverage-open": "yarn test:coverage && open coverage/lcov-report/index.html",
-    "lint": "eslint .",
+    "lint": "eslint src tests",
     "lint:fix": "yarn lint --fix",
     "release": "semantic-release"
   },
@@ -53,7 +52,6 @@
     "eslint-plugin-prettier": "^3.1.4",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
-    "flow-copy-source": "^2.0.9",
     "jest": "^26.4.2",
     "prettier": "^2.1.1",
     "semantic-release": "^17.1.1"
