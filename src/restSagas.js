@@ -12,8 +12,13 @@ export default (api, actions) => {
     yield call(api.createData, action)
     yield put(Creators.createDataSuccess())
   }
+  function* updateData(api, action) {
+    yield call(api.updateData, action)
+    yield put(Creators.updateDataSuccess(action))
+  }
   return [
     takeLatest(Types.GET_DATA, getData, api),
-    takeLatest(Types.CREATE_DATA, createData, api)
+    takeLatest(Types.CREATE_DATA, createData, api),
+    takeLatest(Types.UPDATE_DATA, updateData, api)
   ]
 }
