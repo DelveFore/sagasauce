@@ -74,6 +74,12 @@
     "setupFiles": [
       "<rootDir>/tests/Setup"
     ],
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx}",
+      "!**/node_modules/**",
+      "!**/coverage/**",
+      "!**/dist/**"
+    ],
     "coverageThreshold": {
       "global": {
         "branches": 90,
