@@ -50,3 +50,8 @@ export default {
 }
 
 ```
+
+## Changelog
+Please see Github releases
+
+Generally speaking version 1.x.x is focused on jsonapi.org with the intention to expand into supporting both jsonapi.org and GraphQL specifications.
