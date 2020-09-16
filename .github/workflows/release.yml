@@ -16,8 +16,10 @@ jobs:
           node-version: 14
       - name: Install dependencies
         run: yarn install
+     - name: Build Dist
+        run: yarn build
       - name: Release
         env:
-          GITHUB_TOKEN: ${{ secrets.ACTIONS_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.ACTIONS_COMMIT_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: yarn release
