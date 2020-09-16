@@ -67,6 +67,27 @@ describe('SagaSauce > Sagas', () => {
       })
       expect(api.events.getData).toHaveBeenCalledTimes(1)
     })
+    test('passes includes, params, and filters to API', async () => {
+      const api = createMockApi()
+      const INITIAL_STATE = createInitState()
+      const storeModule = ModuleFactory.create(api, INITIAL_STATE)
+      const harness = createHarness(storeModule, api, INITIAL_STATE)
+      const Types = storeModule.Types
+      expect(harness.getState().events).toEqual(INITIAL_STATE)
+      harness.dispatch({
+        type: Types.GET_DATA,
+        includes: ['company'],
+        params: { id: 2 },
+        filters: { type: 4 }
+      })
+      await harness.waitFor(Types.GET_DATA_SUCCESS)
+      expect(api.events.getData).toHaveBeenCalledTimes(1)
+      expect(api.events.getData).toHaveBeenCalledWith(undefined, {
+        includes: ['company'],
+        params: { id: 2 },
+        filters: { type: 4 }
+      })
+    })
   })
   describe('saucy UPDATE_DATA', () => {
     test('changes state _SUCCESS on API success', async () => {
@@ -80,7 +101,7 @@ describe('SagaSauce > Sagas', () => {
       await harness.waitFor(Types.UPDATE_DATA_SUCCESS)
       expect(api.events.getData).toHaveBeenCalledTimes(0)
       expect(api.events.updateData).toHaveBeenCalledTimes(1)
-      expect(api.events.updateData).toHaveBeenCalledWith({ name: 'Rose' })
+      expect(api.events.updateData).toHaveBeenCalledWith({ name: 'Rose' }, {})
       expect(harness.numCalled(Types.UPDATE_DATA)).toEqual(1)
       expect(harness.numCalled(Types.UPDATE_DATA_SUCCESS)).toEqual(1)
     })
@@ -121,7 +142,7 @@ describe('SagaSauce > Sagas', () => {
       await harness.waitFor(Types.CREATE_DATA_SUCCESS)
       expect(api.events.getData).toHaveBeenCalledTimes(0)
       expect(api.events.createData).toHaveBeenCalledTimes(1)
-      expect(api.events.createData).toHaveBeenCalledWith({ name: 'Rose' })
+      expect(api.events.createData).toHaveBeenCalledWith({ name: 'Rose' }, {})
       expect(harness.numCalled(Types.CREATE_DATA)).toEqual(1)
       expect(harness.numCalled(Types.CREATE_DATA_SUCCESS)).toEqual(1)
       expect(harness.numCalled(Types.CREATE_DATA_FAILURE)).toEqual(0)
@@ -164,7 +185,7 @@ describe('SagaSauce > Sagas', () => {
       harness.dispatch({ type: Types.DELETE_DATA, data: { id: 1 } })
       await harness.waitFor(Types.DELETE_DATA_SUCCESS)
       expect(api.events.deleteData).toHaveBeenCalledTimes(1)
-      expect(api.events.deleteData).toHaveBeenCalledWith({ id: 1 })
+      expect(api.events.deleteData).toHaveBeenCalledWith({ id: 1 }, {})
       expect(harness.numCalled(Types.DELETE_DATA)).toEqual(1)
       expect(harness.numCalled(Types.DELETE_DATA_SUCCESS)).toEqual(1)
       expect(harness.numCalled(Types.DELETE_DATA_FAILURE)).toEqual(0)

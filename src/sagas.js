@@ -1,5 +1,6 @@
 import get from 'lodash/get'
 import { call, put, takeLatest } from 'redux-saga/effects'
+import omit from 'lodash/omit'
 
 /**
  * TODO Support "problem" response from `apisauce` API (https://github.com/infinitered/apisauce#problem-codes)
@@ -10,7 +11,11 @@ import { call, put, takeLatest } from 'redux-saga/effects'
  */
 export const _createGenerators = (api, Creators) => {
   function* getData(api, action) {
-    const response = yield call(api.getData, action.data)
+    const response = yield call(
+      api.getData,
+      action.data,
+      omit(action, ['type', 'data'])
+    )
     if (response.ok) {
       const data = get(response, 'data.data', null)
       yield put(Creators.getDataSuccess(data))
@@ -23,7 +28,11 @@ export const _createGenerators = (api, Creators) => {
     }
   }
   function* createData(api, action) {
-    const response = yield call(api.createData, action.data)
+    const response = yield call(
+      api.createData,
+      action.data,
+      omit(action, ['type', 'data'])
+    )
     if (response.ok) {
       const data = get(response, 'data.data', null)
       yield put(Creators.createDataSuccess(data))
@@ -36,7 +45,11 @@ export const _createGenerators = (api, Creators) => {
     }
   }
   function* updateData(api, action) {
-    const response = yield call(api.updateData, action.data)
+    const response = yield call(
+      api.updateData,
+      action.data,
+      omit(action, ['type', 'data'])
+    )
     if (response.ok) {
       const data = get(response, 'data.data', null)
       yield put(Creators.updateDataSuccess(data))
@@ -49,7 +62,11 @@ export const _createGenerators = (api, Creators) => {
     }
   }
   function* deleteData(api, action) {
-    const response = yield call(api.deleteData, action.data)
+    const response = yield call(
+      api.deleteData,
+      action.data,
+      omit(action, ['type', 'data'])
+    )
     if (response.ok) {
       const data = get(response, 'data.data', null)
       yield put(Creators.deleteDataSuccess(data))
