@@ -16,6 +16,7 @@
     "test:coverage-open": "yarn test:coverage && open coverage/lcov-report/index.html",
     "lint": "eslint src tests",
     "lint:fix": "yarn lint --fix",
+    "prepublishOnly": "yarn build",
     "release": "semantic-release"
   },
   "files": [
@@ -54,6 +55,8 @@
     "eslint-plugin-standard": "^4.0.1",
     "jest": "^26.4.2",
     "prettier": "^2.1.1",
+    "redux-saga": "^1.1.3",
+    "redux-saga-tester": "^1.0.874",
     "semantic-release": "^17.1.1"
   },
   "jest": {
@@ -72,6 +75,12 @@
     },
     "setupFiles": [
       "<rootDir>/tests/Setup"
+    ],
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx}",
+      "!**/node_modules/**",
+      "!**/coverage/**",
+      "!**/dist/**"
     ],
     "coverageThreshold": {
       "global": {

@@ -1,5 +1,5 @@
-import createRestReducerHandlers from './restReducers'
-import createRestActions from './restActions'
-import createRestSagas from './restSagas'
+import createRestReducerHandlers from './reducers'
+import createRestActions from './actions'
+import createRestSagas from './sagas'
 
 export { createRestActions, createRestReducerHandlers, createRestSagas }

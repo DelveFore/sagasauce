@@ -1,5 +1,4 @@
-import createRestReducersHandlers from '../src/restReducers'
-import createRestActions, { createDispatchersFactory } from '../src/restActions'
+import createRestReducersHandlers from '../../src/reducers'
 
 import R from 'ramda'
 
@@ -14,78 +13,6 @@ const makeTypes = (keys) =>
   )
 
 describe('SagaSauce', () => {
-  describe('createDispatchersFactory', () => {
-    test('has GET dispatcher', () => {
-      const dispatch = jest.fn()
-      const Creators = {
-        getData: jest.fn()
-      }
-      const result = createDispatchersFactory('myBooks', Creators)(dispatch)
-      expect(result).toHaveProperty('getMyBooks')
-      result.getMyBooks({ 'filter[name]': 'something' })
-      expect(dispatch).toHaveBeenCalledTimes(1)
-      expect(Creators.getData).toHaveBeenCalledTimes(1)
-      expect(Creators.getData).toHaveBeenCalledWith({
-        'filter[name]': 'something'
-      })
-    })
-    test('has CREATE dispatcher', () => {
-      const dispatch = jest.fn()
-      const Creators = {
-        getData: jest.fn(),
-        createData: jest.fn()
-      }
-      const result = createDispatchersFactory('myBooks', Creators)(dispatch)
-      expect(result).toHaveProperty('createMyBooks')
-      result.createMyBooks({ name: 'something' })
-      expect(dispatch).toHaveBeenCalledTimes(2)
-      expect(Creators.getData).toHaveBeenCalledTimes(1)
-      expect(Creators.createData).toHaveBeenCalledTimes(1)
-      expect(Creators.createData).toHaveBeenCalledWith({ name: 'something' })
-    })
-    test('has UPDATE dispatcher', () => {
-      const dispatch = jest.fn()
-      const Creators = {
-        getData: jest.fn(),
-        createData: jest.fn(),
-        updateData: jest.fn()
-      }
-      const result = createDispatchersFactory('myBooks', Creators)(dispatch)
-      expect(result).toHaveProperty('updateMyBooks')
-      result.updateMyBooks({ name: 'John' })
-      expect(dispatch).toHaveBeenCalledTimes(1)
-      expect(Creators.getData).toHaveBeenCalledTimes(0)
-      expect(Creators.createData).toHaveBeenCalledTimes(0)
-      expect(Creators.updateData).toHaveBeenCalledWith({ name: 'John' })
-    })
-  })
-  describe('createRestActions', () => {
-    test('requires namespace / prefix', () => {
-      expect(() => createRestActions()).toThrow(
-        'createRestActions requires a string as the first argument which is the module prefix'
-      )
-    })
-    test('will not duplicate prefix\'s suffix of "__"', () => {
-      const { Types } = createRestActions('MOVIES__')
-      expect(Types).toHaveProperty('CREATE_DATA', 'MOVIES__CREATE_DATA')
-    })
-    describe('Types', () => {
-      test('returns with expected types that have the prefix in their values', () => {
-        const { Types } = createRestActions('books')
-        expect(Types).toHaveProperty('CREATE_DATA', 'BOOKS__CREATE_DATA')
-      })
-    })
-    describe('createDispatchers', () => {
-      test('returns createDispatchers method and uses the prefix', () => {
-        const Actions = createRestActions('books')
-        expect(Actions).toHaveProperty('createDispatchers')
-        expect(Actions.createDispatchers(() => {})).toHaveProperty('getBooks')
-        expect(Actions.createDispatchers(() => {})).toHaveProperty(
-          'createBooks'
-        )
-      })
-    })
-  })
   describe('createRestReducersHandlers', () => {
     const EXPECTED_TYPES = makeTypes([
       'GET_DATA',
@@ -96,11 +23,14 @@ describe('SagaSauce', () => {
       'CREATE_DATA_FAILURE',
       'UPDATE_DATA',
       'UPDATE_DATA_SUCCESS',
-      'UPDATE_DATA_FAILURE'
+      'UPDATE_DATA_FAILURE',
+      'DELETE_DATA',
+      'DELETE_DATA_SUCCESS',
+      'DELETE_DATA_FAILURE'
     ])
     test('throws errors for missing types', () => {
       expect(() => createRestReducersHandlers({})).toThrow(
-        'Types must have GET'
+        'Types must have GET_DATA'
       )
       Object.keys(EXPECTED_TYPES).forEach((value) => {
         const types = R.omit([value], EXPECTED_TYPES)
@@ -207,6 +137,47 @@ describe('SagaSauce', () => {
         ).toEqual({
           isPending: false,
           data: { name: 'Yamanu' },
+          errors: ['no']
+        })
+      })
+    })
+    describe('DELETE reducer handlers', () => {
+      const stateBeforeUpdate = {
+        data: { id: 1 },
+        errors: null,
+        isPending: false
+      }
+      test('has DELETE_DATA', () => {
+        const reducer = createRestReducersHandlers(EXPECTED_TYPES)
+        expect(reducer).toHaveProperty('DELETE_DATA')
+        expect(reducer.DELETE_DATA(stateBeforeUpdate, { data: 1 })).toEqual({
+          // Do not change the data during UPDATE request
+          data: { id: 1 },
+          errors: null,
+          isPending: true
+        })
+      })
+      test('has DELETE_DATA_SUCCESS', () => {
+        const reducer = createRestReducersHandlers(EXPECTED_TYPES)
+        expect(reducer).toHaveProperty('DELETE_DATA_SUCCESS')
+        expect(
+          reducer.DELETE_DATA_SUCCESS(stateBeforeUpdate, {
+            data: null
+          })
+        ).toEqual({
+          isPending: false,
+          errors: null,
+          data: null
+        })
+      })
+      test('has DELETE_DATA_FAILURE', () => {
+        const reducer = createRestReducersHandlers(EXPECTED_TYPES)
+        expect(reducer).toHaveProperty('DELETE_DATA_FAILURE')
+        expect(
+          reducer.DELETE_DATA_FAILURE(stateBeforeUpdate, { errors: ['no'] })
+        ).toEqual({
+          isPending: false,
+          data: { id: 1 },
           errors: ['no']
         })
       })
